@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Você me odeia?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6eb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #caixa-pergunta {
+            text-align: center;
+            background: white;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 105, 135, 0.2);
+        }
+
+        h1 {
+            color: #ff4d6d;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+
+        #btn-sim {
+            background-color: #4CAF50;
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        #btn-nao {
+            background-color: #ff4d4d;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+            z-index: 10;
+        }
+
+        #caixa-video {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 105, 135, 0.2);
+            text-align: center;
+        }
+
+        video {
+            border-radius: 15px;
+            width: 80vw;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="caixa-pergunta">
+        <h1>Você me odeia? 🥺</h1>
+        <div class="buttons">
+            <button id="btn-sim">Sim</button>
+            <button id="btn-nao">Não</button>
+        </div>
+    </div>
+
+    <div id="caixa-video">
+        <h2 style="color: #ff4d6d; margin-top: 0;">SÉRIO??</h2>
+        <video id="meu-video" src="rick.mp4" controls></video>
+    </div>
+
+    <audio id="audio-nao" src="cano.mp3"></audio>
+
+    <script>
+        const btnSim = document.getElementById('btn-sim');
+        const btnNao = document.getElementById('btn-nao');
+        const caixaPergunta = document.getElementById('caixa-pergunta');
+        const caixaVideo = document.getElementById('caixa-video');
+        
+        const meuVideo = document.getElementById('meu-video');
+        const audioNao = document.getElementById('audio-nao');
+        
+        audioNao.loop = false;
+
+        let contadorCliques = 0;
+        let cronometroAudio; // Variável para guardar o tempo do áudio
+
+        // --- LÓGICA DO BOTÃO "NÃO" ---
+        btnNao.addEventListener('click', function() {
+            // Se a pessoa clicar rápido, cancela a contagem anterior para não bugar
+            clearTimeout(cronometroAudio);
+
+            // Toca o áudio
+            audioNao.currentTime = 0; 
+            audioNao.play().catch(erro => console.log("Aguardando carregamento..."));
+
+            // PARTE NOVA: Espera 2 segundos (2000 milissegundos) e pausa o áudio
+            cronometroAudio = setTimeout(function() {
+                audioNao.pause();
+            }, 2800); 
+
+            contadorCliques++;
+
+            if (contadorCliques >= 4) {
+                btnNao.style.display = 'none';
+            } else {
+                btnNao.style.position = 'fixed';
+                const margem = 20; 
+                const larguraMaxima = window.innerWidth - btnNao.offsetWidth - margem;
+                const alturaMaxima = window.innerHeight - btnNao.offsetHeight - margem;
+                
+                const posAleatoriaX = Math.floor(Math.random() * (larguraMaxima - margem) + margem);
+                const posAleatoriaY = Math.floor(Math.random() * (alturaMaxima - margem) + margem);
+                
+                btnNao.style.left = posAleatoriaX + 'px';
+                btnNao.style.top = posAleatoriaY + 'px';
+            }
+        });
+
+        // --- LÓGICA DO BOTÃO "SIM" ---
+        btnSim.addEventListener('click', function() {
+            // Cancela o cronômetro e pausa tudo imediatamente se clicar no Sim
+            clearTimeout(cronometroAudio);
+            audioNao.pause();
+            audioNao.currentTime = 0;
+
+            caixaPergunta.style.display = 'none';
+            caixaVideo.style.display = 'block';
+            meuVideo.play();
+        });
+    </script>
+
+</body>
+</html>
